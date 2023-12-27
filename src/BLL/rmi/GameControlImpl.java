@@ -2,18 +2,20 @@ package BLL.rmi;
 
 import BLL.Repository.GameDataRepository;
 import BLL.Repository.UserRepository;
-import Model.DataSQL_Model;
+//import Data.Database.DataSQL_Model;
 import Model.GameData;
 import Model.User;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class GameControlImpl implements GameControlInterface {
+public class GameControlImpl extends UnicastRemoteObject implements GameControlInterface {
 
     GameDataRepository gameDataRepository = new GameDataRepository();
     UserRepository userRepository = new UserRepository();
-    DataSQL_Model sql = new DataSQL_Model();
-    public GameControlImpl() {
+//    DataSQL_Model sql = new DataSQL_Model();
+    public GameControlImpl() throws RemoteException {
 
     }
 
@@ -40,24 +42,22 @@ public class GameControlImpl implements GameControlInterface {
     }
 
     @Override
-    public GameData getGameData(int userId) {
-        // Tạo mới gamedata random bởi contructor new GameData();
-        GameData gameData = new GameData();
+    public GameData getGameData() {
+        System.out.println(GameData.getInstance());
 
-        // Thêm vào csdl
-        GameData newGameData =  gameDataRepository.insert(gameData);
-
-
-        return newGameData;
+        // TODO: Coppy GameData, thay x, y = -1 (dấu đáp án) sau đó mới return bản sao
+        return GameData.getInstance();
     }
 
     @Override
     public boolean checkResult(int userId, int x, int y) {
-        GameData currentGame = gameDataRepository.findByUserId(userId);
+        GameData currentGame = GameData.getInstance();
 
         if (currentGame.getX() == x && currentGame.getY() == y) {
             //TODO: Cộng diem cho user
-            sql.increasePoint(userId);
+//            sql.increasePoint(userId);
+
+            GameData.destroyInstance();
             return true;
         }
 
@@ -67,6 +67,7 @@ public class GameControlImpl implements GameControlInterface {
     @Override
     public List<User> getRanking() {
 
-        return sql.getListUser();
+//        return sql.getListUser();
+        return null;
     }
 }

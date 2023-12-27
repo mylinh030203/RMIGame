@@ -58,13 +58,19 @@ public class Client_GUI extends JFrame{
 		client.setResizable(false);
 	}
 	
-	private Icon getIcon(byte[] index, byte[] index2, int size) {
-		int width = size, height = size;
-
-		Image image = new ImageIcon(getClass().getResource("/image/image" + index + "_" + index2 + ".png")).getImage();
-		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
-		return icon;
-	}
+//	private Icon getIcon(byte[] index, byte[] index2, int size) {
+//		int width = size, height = size;
+//
+//		Image image = new ImageIcon(getClass().getResource("/image/image" + index + "_" + index2 + ".png")).getImage();
+//		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
+//		return icon;
+//	}
+private Icon getIcon(int index, int index2, int size) {
+	int width = size, height = size;
+	Image image = new ImageIcon(getClass().getResource("/image/image" + index + "_" + index2 + ".png")).getImage();
+	Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
+	return icon;
+}
 	
 	public void notification(String message) {
 		JOptionPane.showMessageDialog(null, message);
