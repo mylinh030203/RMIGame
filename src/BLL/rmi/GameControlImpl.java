@@ -2,6 +2,7 @@ package BLL.rmi;
 
 import BLL.Repository.GameDataRepository;
 import BLL.Repository.UserRepository;
+import Model.DataSQL_Model;
 import Model.GameData;
 import Model.User;
 
@@ -11,7 +12,7 @@ public class GameControlImpl implements GameControlInterface {
 
     GameDataRepository gameDataRepository = new GameDataRepository();
     UserRepository userRepository = new UserRepository();
-
+    DataSQL_Model sql = new DataSQL_Model();
     public GameControlImpl() {
 
     }
@@ -56,7 +57,7 @@ public class GameControlImpl implements GameControlInterface {
 
         if (currentGame.getX() == x && currentGame.getY() == y) {
             //TODO: Cộng diem cho user
-
+            sql.increasePoint(userId);
             return true;
         }
 
@@ -66,6 +67,6 @@ public class GameControlImpl implements GameControlInterface {
     @Override
     public List<User> getRanking() {
 
-        return null;
+        return sql.getListUser();
     }
 }

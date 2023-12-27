@@ -19,7 +19,7 @@ public class Connect {
 		try{
 			   String userName = "linhptm";
 			   String password = "Havana18081988@";
-			   String url = "jdbc:mysql://localhost:3306/ltmck";
+			   String url = "jdbc:mysql://localhost:3306/rmigame";
 			   Class.forName ("com.mysql.cj.jdbc.Driver");
 			   conn = DriverManager.getConnection(url, userName, password);
 			   System.out.println("Ok");

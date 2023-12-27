@@ -20,8 +20,7 @@ public class GameDataRepository{
 
     }
 
-    public User find(int id) {
-
+    public void find(int id) {
     }
 
     public GameData findByUserId(int id) {

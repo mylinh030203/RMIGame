@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import Controller.client;
 
 
 
@@ -27,7 +26,8 @@ public class DataSQL_Model {
 		conn = new Connect().connect();
 	}
 	public boolean Login(String Username, String Password) throws SQLException, UnknownHostException, IOException {
-		rs=cn.listAll("Select * from account where Username = '"+Username+"' and Password = '"+Password+"'");
+//		rs=cn.listAll("Select * from account where Username = '"+Username+"' and Password = '"+Password+"'");
+		rs=cn.listAll("Select * from user where Username = '"+Username+"' and Password = '"+Password+"'");
 		if(rs.next()) {
 			return true;
 		}else {
@@ -37,24 +37,26 @@ public class DataSQL_Model {
 	}
 	
 	public boolean Insert(String Username, String Password, String FullName, int Age) {
-		String sql1 = "INSERT INTO account VALUES (?,?)";
-		try {
-			ps = conn.prepareStatement(sql1);
-			ps.setString(1,Username);
-			ps.setString(2,Password);			
-			int record = ps.executeUpdate();
-			if(record == 0)
-				return false;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			
-		}
-		String sql2 = "INSERT INTO information (Username, FullName, Age, Score) VALUES (?,?,?,0)";
+//		String sql1 = "INSERT INTO account VALUES (?,?)";
+//		try {
+//			ps = conn.prepareStatement(sql1);
+//			ps.setString(1,Username);
+//			ps.setString(2,Password);
+//			int record = ps.executeUpdate();
+//			if(record == 0)
+//				return false;
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//
+//		}
+//		String sql2 = "INSERT INTO information (Username, FullName, Age, Score) VALUES (?,?,?,0)";
+		String sql2 = "INSERT INTO user (Username,Password, FullName, Age, Score) VALUES (?,?,?,?,0)";
 		try {
 			ps = conn.prepareStatement(sql2);
 			ps.setString(1,Username);
-			ps.setString(2,FullName);	
-			ps.setInt(3,Age);
+			ps.setString(2,Password);
+			ps.setString(3,FullName);
+			ps.setInt(4,Age);
 			
 			int record = ps.executeUpdate();
 			return record > 0;
@@ -65,8 +67,8 @@ public class DataSQL_Model {
 	}
 	public ArrayList<User> getListUser(){
 		ArrayList<User> ListUser = new ArrayList<User>();
-		
-		String sql = "Select * from information order by Score DESC";
+
+		String sql = "Select * from user order by Score DESC";
 		rs = cn.listAll(sql);
 		try {
 			while(rs.next()) {
@@ -85,11 +87,11 @@ public class DataSQL_Model {
 		return ListUser;
 	}
 	
-	public void increasePoint(String Username) {
-		String sql = "UPDATE information SET Score = Score + 1 WHERE Username = ?";
+	public void increasePoint(int userID) {
+		String sql = "UPDATE user SET Score = Score + 1 WHERE id = ?";
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, Username);			
+			ps.setInt(1, userID);
 			int record = ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -98,7 +100,7 @@ public class DataSQL_Model {
 	}
 	
 	public int getScore(String userName) {
-		String sql = "SELECT Score FROM information WHERE Username = ?";
+		String sql = "SELECT Score FROM user WHERE Username = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userName);
