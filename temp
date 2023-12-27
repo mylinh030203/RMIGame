@@ -1,0 +1,5 @@
+ dgram = remoteDesktop.takeScreenshotServer("jpg");
+
+                    ByteArrayInputStream bis = new ByteArrayInputStream(dgram);
+                    BufferedImage screenshot = ImageIO.read(bis);
+
