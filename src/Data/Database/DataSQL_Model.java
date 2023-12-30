@@ -119,7 +119,7 @@
 //		for (User u : a)
 //			System.out.println(u);
 ////		System.out.println(dataSQL_Model.Login("b", "c"));
-////		dataSQL_Model.increasePoint("HaiZuka");
+////		dataSQL_Model.increasePoint("linhptm");
 ////		System.out.println(dataSQL_Model.getScore(""));;
 //
 //	}

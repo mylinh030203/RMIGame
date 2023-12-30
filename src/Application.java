@@ -9,13 +9,6 @@ import java.rmi.RemoteException;
 
 public class Application {
     public static void main(String[] args) {
-        RmiServer rmiServer =  new RmiServer();
-        try {
-            rmiServer.startBindingOnRmiServer("localhost", 111);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         RmiClient rmiClient = new RmiClient();
         try {
             rmiClient.startConnectingToRmiServer("localhost", 111);

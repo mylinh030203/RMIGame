@@ -1,5 +1,7 @@
 package View;
 
+import Model.GameData;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -14,8 +16,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+import BLL.Client_GUI_BLL;
 public class Client_GUI extends JFrame{
+	GameData gameData = new GameData();
+	Client_GUI_BLL clientGuiBll;
+
+
 	public JButton BT[][] = new JButton[100][100];
 	public JButton ListUser;
 	public JButton Exit;
@@ -57,7 +63,48 @@ public class Client_GUI extends JFrame{
 		client.setLocationRelativeTo(null);
 		client.setResizable(false);
 	}
-	
+	public void addAction() {
+		clientGuiBll = new Client_GUI_BLL() {
+			@Override
+			public void updateClientUI(GameData gameData) {
+				NewGame(gameData.getN(), gameData.getX(), gameData.getY(), gameData.getColor());
+			}
+
+			@Override
+			public void notification(String mess) {
+
+			}
+		};
+
+		for (int i = 0; i < gameData.getN(); i++)
+			for (int j = 0; j < gameData.getN(); j++) {
+				BT[i][j].addActionListener(e -> {
+					// lấy giá trị x, y từ giao diện
+
+
+					clientGuiBll.onClickAns(e.getActionCommand());
+//						Client_GUI_BLL clientGuiBll = new Client_GUI_BLL() {
+//							@Override
+//							public void onClickAns(int x, int y) {
+//								super.onClickAns(x, y);
+//							}
+//						}
+
+				});
+			}
+		Exit.addActionListener(e -> {
+			// TODO Auto-generated method stub
+			System.out.println("Hello");
+			setVisible(false);
+
+		});
+
+		ListUser.addActionListener(e -> {
+			// TODO Auto-generated method stub
+
+			//gọi bxh
+		});
+	}
 //	private Icon getIcon(byte[] index, byte[] index2, int size) {
 //		int width = size, height = size;
 //
@@ -80,6 +127,8 @@ private Icon getIcon(int index, int index2, int size) {
 		client.dispose();
 		return new Client_GUI(n, x, y, color);
 	}
+
+
 	
 	public void setTitle(String title, int Score) {
 		client.setTitle("Client: " + title + " | Score: " + Score);

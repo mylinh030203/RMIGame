@@ -58,6 +58,9 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
 //            sql.increasePoint(userId);
 
             GameData.destroyInstance();
+
+            //TODO: Gọi callback từng client update game mới
+            // hoặc để client liên tục check trạng thái và tự cập nhật
             return true;
         }
 
