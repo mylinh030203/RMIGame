@@ -56,7 +56,7 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
         if (currentGame.getX() == x && currentGame.getY() == y) {
             //TODO: Cộng diem cho user
 //            sql.increasePoint(userId);
-
+            System.out.println(x+"  check "+y);
             GameData.destroyInstance();
 
             //TODO: Gọi callback từng client update game mới

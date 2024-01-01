@@ -18,10 +18,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import BLL.Client_GUI_BLL;
 public class Client_GUI extends JFrame{
-	GameData gameData = new GameData();
+	GameData gameData;
 	Client_GUI_BLL clientGuiBll;
 
-
+	byte[]anh1,anh2;
 	public JButton BT[][] = new JButton[100][100];
 	public JButton ListUser;
 	public JButton Exit;
@@ -29,8 +29,10 @@ public class Client_GUI extends JFrame{
 	JFrame client;
 	public int size =450;
 	public int n = 4;
-	public Client_GUI(int n, int x, int y, int color) {
-		this.n = n;
+
+	public Client_GUI() {
+		init();
+
 		client = new JFrame("Client");
 		Container cont = client.getContentPane();
 		Panel p = new Panel();
@@ -40,13 +42,14 @@ public class Client_GUI extends JFrame{
 			for(int j = 0; j < n; j++) {
 				BT[i][j] = new JButton();
 				BT[i][j].setActionCommand(i + " " + j);
-				BT[i][j].setIcon(getIcon(color, 1, (size) / n));
+				BT[i][j].setIcon(getIcon(gameData.getImage(), (size) / n));
 				BT[i][j].setBorder(null);
 				p.add(BT[i][j]);
 			}
 		}
-		BT[x][y].setIcon(getIcon(color, 2, (size) / n));
-		
+		BT[gameData.getX()][gameData.getY()].setIcon(getIcon(gameData.getImage2(), (size) / n));
+
+
 		cont.add(p);
 		
 		Panel p1 = new Panel();
@@ -62,12 +65,20 @@ public class Client_GUI extends JFrame{
 		client.setVisible(true);
 		client.setLocationRelativeTo(null);
 		client.setResizable(false);
+<<<<<<< Updated upstream
 	}
 	public void addAction() {
+=======
+
+		addAction();
+	}
+
+	public void init() {
+>>>>>>> Stashed changes
 		clientGuiBll = new Client_GUI_BLL() {
 			@Override
 			public void updateClientUI(GameData gameData) {
-				NewGame(gameData.getN(), gameData.getX(), gameData.getY(), gameData.getColor());
+				NewGame();
 			}
 
 			@Override
@@ -76,6 +87,14 @@ public class Client_GUI extends JFrame{
 			}
 		};
 
+<<<<<<< Updated upstream
+=======
+		this.gameData = clientGuiBll.onStartGame();
+		this.n = gameData.getN();
+	}
+
+	public  void addAction() {
+>>>>>>> Stashed changes
 		for (int i = 0; i < gameData.getN(); i++)
 			for (int j = 0; j < gameData.getN(); j++) {
 				BT[i][j].addActionListener(e -> {
@@ -83,12 +102,6 @@ public class Client_GUI extends JFrame{
 
 
 					clientGuiBll.onClickAns(e.getActionCommand());
-//						Client_GUI_BLL clientGuiBll = new Client_GUI_BLL() {
-//							@Override
-//							public void onClickAns(int x, int y) {
-//								super.onClickAns(x, y);
-//							}
-//						}
 
 				});
 			}
@@ -112,20 +125,22 @@ public class Client_GUI extends JFrame{
 //		Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 //		return icon;
 //	}
-private Icon getIcon(int index, int index2, int size) {
+private Icon getIcon(byte[]anh, int size) {
 	int width = size, height = size;
-	Image image = new ImageIcon(getClass().getResource("/image/image" + index + "_" + index2 + ".png")).getImage();
+	Image image = new ImageIcon(anh).getImage();
 	Icon icon = new ImageIcon(image.getScaledInstance(width, height, image.SCALE_SMOOTH));
 	return icon;
 }
+
+
 	
 	public void notification(String message) {
 		JOptionPane.showMessageDialog(null, message);
 	}
 	
-	public Client_GUI NewGame(int n, int x, int y, int color) {
+	public Client_GUI NewGame() {
 		client.dispose();
-		return new Client_GUI(n, x, y, color);
+		return new Client_GUI();
 	}
 
 
@@ -141,7 +156,7 @@ private Icon getIcon(int index, int index2, int size) {
 	}
 	
 	public static void main(String[] args) {
-		Client_GUI client_GUI = new  Client_GUI(5, 0, 0,1);
+		Client_GUI client_GUI = new  Client_GUI();
 //		client_GUI.NewGame(10);
 	}
 }

@@ -1,6 +1,7 @@
 package Model;
 
-import java.io.Serial;
+import util.ImageSupport;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -19,10 +20,20 @@ public class GameData implements Serializable {
         instance = null;
     }
 
-    private int x, y, n, color;
+    private final int x;
+    private final int y;
+    private final int n;
 
     byte[] image;
     byte[] image2;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public byte[] getImage2() {
+        return image2;
+    }
 
     public int getX() {
         return x;
@@ -36,9 +47,6 @@ public class GameData implements Serializable {
         return n;
     }
 
-    public int getColor() {
-        return color;
-    }
 
     @Override
     public String toString() {
@@ -46,22 +54,30 @@ public class GameData implements Serializable {
                 "x=" + x +
                 ", y=" + y +
                 ", n=" + n +
-                ", color=" + color +
                 ", image=" + Arrays.toString(image) +
                 ", image2=" + Arrays.toString(image2) +
                 ", NumberOfImage=" + NumberOfImage +
                 '}';
     }
 
-    int NumberOfImage = 37;
+
     public GameData(){
         n = (int) (Math.random() * 100000) % 5 + 3;
         x = (int) (Math.random() * 100000) % n;
         y = (int) (Math.random() * 100000) % n;
-        color = (int)(Math.random()*100000) % NumberOfImage + 1;
 
-//        image = getImage(color)//
+        randomImage();
     }
 
+    private int NumberOfImage = 37;
+    private void randomImage() {
+        int index = (int)(Math.random()*100000) % NumberOfImage + 1;
 
+        this.image = ImageSupport.getImageAsByteArray("D:\\intellij\\RMIGame\\RMIGame\\src\\image\\image"+index+"_1.png");
+        this.image2 = ImageSupport.getImageAsByteArray("D:\\intellij\\RMIGame\\RMIGame\\src\\image\\image"+index+"_2.png");
+
+        if (image == null) {
+            System.out.println("Image NULL");
+        }
+    }
 }

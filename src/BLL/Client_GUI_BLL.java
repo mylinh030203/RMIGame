@@ -27,15 +27,21 @@ public abstract class Client_GUI_BLL {
     // Dialog thông báo mess
     abstract public void notification(String mess);
 
-    public void onStartGame() {
+    public GameData onStartGame() {
         try {
             GameData gameData = gameControlRemote.getGameData();
 
+<<<<<<< Updated upstream
 
+=======
+            return gameData;
+>>>>>>> Stashed changes
         } catch (Exception e) {
             e.printStackTrace();
             notification("Error when try to start game!");
         }
+
+        return null;
     }
 
     // Khi người dùng click ảnh chọn đáp án
@@ -43,6 +49,10 @@ public abstract class Client_GUI_BLL {
         String[] ans = x_y.split(" ");
         int x = Integer.parseInt(ans[0]);
         int y = Integer.parseInt(ans[1]);
+<<<<<<< Updated upstream
+=======
+        System.out.println(x+ " " + y);
+>>>>>>> Stashed changes
         try {
             Boolean result = gameControlRemote.checkResult(1, x, y);
 
