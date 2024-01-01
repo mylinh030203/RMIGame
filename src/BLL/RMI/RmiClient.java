@@ -1,4 +1,4 @@
-package BLL.rmi;
+package BLL.RMI;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -6,6 +6,17 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class RmiClient {
+
+    private static RmiClient instance;
+
+    public static RmiClient getInstance() {
+        if (instance == null) {
+            instance = new RmiClient();
+        }
+
+        return instance;
+    }
+
     private GameControlInterface remote_obj;
     private boolean is_remote_server;
 

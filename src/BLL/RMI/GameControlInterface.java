@@ -1,4 +1,4 @@
-package BLL.rmi;
+package BLL.RMI;
 
 import Model.GameData;
 import Model.User;

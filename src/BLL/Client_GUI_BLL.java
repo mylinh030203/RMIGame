@@ -1,20 +1,19 @@
 package BLL;
 
-import BLL.rmi.GameControlInterface;
-import BLL.rmi.RmiClient;
-import Constant.client.ClientConstant;
+import BLL.RMI.GameControlInterface;
+import BLL.RMI.RmiClient;
+import Constant.AppConstant;
 import Model.GameData;
-import View.Client_GUI;
 
 public abstract class Client_GUI_BLL {
     RmiClient rmiClient;
     GameControlInterface gameControlRemote;
 
     public Client_GUI_BLL() {
-        rmiClient = new RmiClient();
+        rmiClient = RmiClient.getInstance();
 
         try {
-            rmiClient.startConnectingToRmiServer(ClientConstant.SERVER_HOST, ClientConstant.SERVER_PORT);
+            rmiClient.startConnectingToRmiServer(AppConstant.SERVER_HOST, AppConstant.SERVER_PORT);
 
             this.gameControlRemote = rmiClient.getRemoteObject();
         } catch (Exception e) {
@@ -31,7 +30,7 @@ public abstract class Client_GUI_BLL {
         try {
             GameData gameData = gameControlRemote.getGameData();
 
-
+            updateClientUI(gameData);
         } catch (Exception e) {
             e.printStackTrace();
             notification("Error when try to start game!");
@@ -43,8 +42,9 @@ public abstract class Client_GUI_BLL {
         String[] ans = x_y.split(" ");
         int x = Integer.parseInt(ans[0]);
         int y = Integer.parseInt(ans[1]);
+
         try {
-            Boolean result = gameControlRemote.checkResult(1, x, y);
+            boolean result = gameControlRemote.checkResult(1, x, y);
 
             if (result) {
                 GameData newGameData = gameControlRemote.getGameData();

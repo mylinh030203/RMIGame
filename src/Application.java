@@ -1,11 +1,6 @@
-import BLL.rmi.GameControlInterface;
-import BLL.rmi.RmiClient;
-import BLL.rmi.RmiServer;
+import BLL.RMI.GameControlInterface;
+import BLL.RMI.RmiClient;
 import Model.GameData;
-
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 
 public class Application {
     public static void main(String[] args) {

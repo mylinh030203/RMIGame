@@ -2,14 +2,11 @@ package View;
 
 import Model.GameData;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -62,8 +59,10 @@ public class Client_GUI extends JFrame{
 		client.setVisible(true);
 		client.setLocationRelativeTo(null);
 		client.setResizable(false);
+
+		init();
 	}
-	public void addAction() {
+	public void init() {
 		clientGuiBll = new Client_GUI_BLL() {
 			@Override
 			public void updateClientUI(GameData gameData) {
@@ -75,6 +74,8 @@ public class Client_GUI extends JFrame{
 
 			}
 		};
+
+//		clientGuiBll.onStartGame();
 
 		for (int i = 0; i < gameData.getN(); i++)
 			for (int j = 0; j < gameData.getN(); j++) {

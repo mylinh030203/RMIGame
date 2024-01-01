@@ -1,4 +1,4 @@
-package BLL.rmi;
+package BLL.RMI;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
