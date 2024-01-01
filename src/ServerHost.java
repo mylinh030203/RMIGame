@@ -1,10 +1,11 @@
-import BLL.rmi.RmiServer;
+import BLL.RMI.RmiServer;
+import Constant.AppConstant;
 
 public class ServerHost {
     public static void main(String[] args) {
         RmiServer rmiServer =  new RmiServer();
         try {
-            rmiServer.startBindingOnRmiServer("localhost", 111);
+            rmiServer.startBindingOnRmiServer(AppConstant.SERVER_HOST, AppConstant.SERVER_PORT);
         } catch (Exception e) {
             e.printStackTrace();
         }

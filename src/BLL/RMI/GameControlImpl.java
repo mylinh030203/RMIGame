@@ -1,4 +1,4 @@
-package BLL.rmi;
+package BLL.RMI;
 
 import BLL.Repository.GameDataRepository;
 import BLL.Repository.UserRepository;
@@ -45,7 +45,6 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     public GameData getGameData() {
         System.out.println(GameData.getInstance());
 
-        // TODO: Coppy GameData, thay x, y = -1 (dấu đáp án) sau đó mới return bản sao
         return GameData.getInstance();
     }
 
