@@ -63,6 +63,7 @@ public class Client_GUI extends JFrame{
 		client.setLocationRelativeTo(null);
 		client.setResizable(false);
 
+		addAction();
 	}
 //	public void addAction() {
 //		addAction();
@@ -97,10 +98,11 @@ public class Client_GUI extends JFrame{
 		for (int i = 0; i < gameData.getN(); i++)
 			for (int j = 0; j < gameData.getN(); j++) {
 				BT[i][j].addActionListener(e -> {
-					// lấy giá trị x, y từ giao diện
+					String[] ans = e.getActionCommand().split(" ");
+					int x = Integer.parseInt(ans[0]);
+					int y = Integer.parseInt(ans[1]);
 
-
-					clientGuiBll.onClickAns(e.getActionCommand());
+					clientGuiBll.onClickAns(x, y);
 
 				});
 			}

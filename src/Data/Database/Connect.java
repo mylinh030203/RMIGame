@@ -17,8 +17,8 @@ public class Connect {
 		// TODO Auto-generated method stub
 
 		try{
-			   String userName = "linhptm";
-			   String password = "Havana18081988@";
+			   String userName = "root";
+			   String password = "";
 			   String url = "jdbc:mysql://localhost:3306/rmigame";
 			   Class.forName ("com.mysql.cj.jdbc.Driver");
 			   conn = DriverManager.getConnection(url, userName, password);

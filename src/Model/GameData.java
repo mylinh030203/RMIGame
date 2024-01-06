@@ -48,24 +48,29 @@ public class GameData implements Serializable {
         return n;
     }
 
-    public int getId() {return id;}
+    public int getId() {
+        return id;
+    }
 
 
     @Override
     public String toString() {
+        String isImageNull = image == null ? "null" : "not null";
+        String isImage2Null = image2 == null ? "null" : "not null";
+
         return "GameData{" +
                 "x=" + x +
                 ", y=" + y +
                 ", n=" + n +
-                ", image=" + Arrays.toString(image) +
-                ", image2=" + Arrays.toString(image2) +
+                ", image=" + isImageNull +
+                ", image2=" + isImage2Null +
                 ", NumberOfImage=" + NumberOfImage +
                 '}';
     }
 
 
-    public GameData(){
-        id = (int) (Math.random()*1000);
+    public GameData() {
+        id = (int) (Math.random() * 1000);
         n = (int) (Math.random() * 100000) % 5 + 3;
         x = (int) (Math.random() * 100000) % n;
         y = (int) (Math.random() * 100000) % n;
@@ -74,11 +79,17 @@ public class GameData implements Serializable {
     }
 
     private int NumberOfImage = 37;
-    private void randomImage() {
-        int index = (int)(Math.random()*100000) % NumberOfImage + 1;
 
-        this.image = ImageSupport.getImageAsByteArray("D:\\intellij\\RMIGame\\RMIGame\\src\\image\\image"+index+"_1.png");
-        this.image2 = ImageSupport.getImageAsByteArray("D:\\intellij\\RMIGame\\RMIGame\\src\\image\\image"+index+"_2.png");
+    private void randomImage() {
+        int index = (int) (Math.random() * 100000) % NumberOfImage + 1;
+
+//        String currentDirectory = System.getProperty("user.dir");
+//
+//        // In ra đường dẫn thư mục đang thực thi
+//        System.out.println("Thư mục đang thực thi: " + currentDirectory);
+
+        this.image = ImageSupport.getImageAsByteArray("src\\image\\image" + index + "_1.png");
+        this.image2 = ImageSupport.getImageAsByteArray("src\\image\\image" + index + "_2.png");
 
         if (image == null) {
             System.out.println("Image NULL");

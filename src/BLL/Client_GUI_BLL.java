@@ -5,6 +5,7 @@ import BLL.rmi.RmiClient;
 import Constant.client.AppConstant;
 import Constant.client.ClientConstant;
 import Model.GameData;
+import util.enum_class.ResultStatus;
 
 
 public abstract class Client_GUI_BLL {
@@ -52,20 +53,23 @@ public abstract class Client_GUI_BLL {
     }
 
     // Khi người dùng click ảnh chọn đáp án
-    public void onClickAns(String x_y) {
-        String[] ans = x_y.split(" ");
-        int x = Integer.parseInt(ans[0]);
-        int y = Integer.parseInt(ans[1]);
+    public void onClickAns(int x, int y) {
 
-        System.out.println(x+ " " + y);
+
+        System.out.println(x + " " + y);
 
         try {
-            boolean result = gameControlRemote.checkResult(1, x, y);
+            ResultStatus resultStatus = gameControlRemote.checkResult(1,gameData.getId(), x, y);
 
-            if (result) {
-                updateClientUI();
-            } else {
+            if (resultStatus == ResultStatus.CORRECT) {
+                // Hiện chúc mừng trên giao dieện nếu cần
+
+            } else if(resultStatus == ResultStatus.WRONG) {
                 onResultWrong();
+            } else  {
+                // Thông báo chậm tay, da co nguời tr lời úng
+
+                System.out.println("Qúa hạn");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,23 +85,23 @@ public abstract class Client_GUI_BLL {
 
     private void checkNewGameData() {
         Thread checkUpdateThread = new Thread(() -> {
-
             while (true) {
                 try {
+                    Thread.sleep(ClientConstant.TIME_REFRESH_MILI_SECOND);
+
+//                    System.out.println("Check gameData update: client gameDataId: " + gameData.getId()
+//                            + "server gameDataId: " + gameControlRemote.getGameDataId() );
+
                     if (gameControlRemote.getGameDataId() != gameData.getId()) {
                         updateClientUI();
+
+                        break;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     notification("Error when try to check update game data!");
                 }
-
-                try {
-                    Thread.sleep(ClientConstant.TIME_REFRESH_MILI_SECOND);
-                } catch (InterruptedException ignored) {
-                }
             }
-
         });
 
         checkUpdateThread.start();

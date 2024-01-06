@@ -2,6 +2,7 @@ package BLL.Repository;
 
 import Model.User;
 import Data.Database.Connect;
+import util.PasswordHash;
 
 import java.sql.*;
 
@@ -21,14 +22,20 @@ public class UserRepository {
 	public UserRepository() {
 		conn = new Connect().connect();
 	}
-    public boolean Insert(String username, String password, String fullname, int age) {
+    public boolean insert(User user) {
+
+		String username = user.getUsername();
+		String password = PasswordHash.generateMD5(user.getPassword());
+		String fullName = user.getFullname();
+		int age = user.getAge();
+
 
 		String sql2 = "INSERT INTO users (username,password, fullname, age, score) VALUES (?,?,?,?,0)";
 		try {
 			ps = conn.prepareStatement(sql2);
 			ps.setString(1,username);
 			ps.setString(2,password);
-			ps.setString(3, fullname);
+			ps.setString(3, fullName);
 			ps.setInt(4,age);
 
 			int record = ps.executeUpdate();
@@ -87,7 +94,9 @@ public class UserRepository {
 				user.setFullname(rs.getString(2));
 				user.setAge(rs.getInt(3));
 				user.setScore(rs.getInt(4));
-            }
+            } else {
+				return null;
+			}
 			return user;
 
         } catch (SQLException e) {
