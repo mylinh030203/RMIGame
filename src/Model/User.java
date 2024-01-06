@@ -7,6 +7,7 @@ public class User implements Serializable{
 	String Fullname;
 	int Age;
 	int Score;
+
 	public User() {
 		
 	}

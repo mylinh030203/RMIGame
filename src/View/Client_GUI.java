@@ -2,14 +2,11 @@ package View;
 
 import Model.GameData;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -65,20 +62,24 @@ public class Client_GUI extends JFrame{
 		client.setVisible(true);
 		client.setLocationRelativeTo(null);
 		client.setResizable(false);
-<<<<<<< Updated upstream
-	}
-	public void addAction() {
-=======
 
-		addAction();
 	}
+//	public void addAction() {
+//		addAction();
+//	}
 
 	public void init() {
->>>>>>> Stashed changes
-		clientGuiBll = new Client_GUI_BLL() {
+		clientGuiBll = new Client_GUI_BLL(){
 			@Override
-			public void updateClientUI(GameData gameData) {
+			public void updateClientUI() {
 				NewGame();
+			}
+
+
+			@Override
+			public void onResultWrong() {
+				block();
+
 			}
 
 			@Override
@@ -87,14 +88,12 @@ public class Client_GUI extends JFrame{
 			}
 		};
 
-<<<<<<< Updated upstream
-=======
 		this.gameData = clientGuiBll.onStartGame();
 		this.n = gameData.getN();
 	}
 
 	public  void addAction() {
->>>>>>> Stashed changes
+
 		for (int i = 0; i < gameData.getN(); i++)
 			for (int j = 0; j < gameData.getN(); j++) {
 				BT[i][j].addActionListener(e -> {
@@ -141,6 +140,11 @@ private Icon getIcon(byte[]anh, int size) {
 	public Client_GUI NewGame() {
 		client.dispose();
 		return new Client_GUI();
+	}
+
+	public Block_GUI block(){
+		client.dispose();
+		return new Block_GUI();
 	}
 
 

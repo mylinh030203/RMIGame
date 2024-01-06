@@ -1,18 +1,71 @@
 package BLL.Repository;
 
 import Model.User;
+import Data.Database.Connect;
+
+import java.sql.*;
 
 public class UserRepository {
 
-    public User insert(User user) {
+//    public User insert(User user) {
+//
+//    }
 
-        //TODO: return user  insert recent
-        return new User();
+    Connect cn = new Connect();
+
+	Connection conn;
+	Statement stmt;
+	ResultSet rs;
+	PreparedStatement ps;
+
+	public UserRepository() {
+		conn = new Connect().connect();
+	}
+    public boolean Insert(User user, String password) {
+
+		String sql2 = "INSERT INTO users (username,password, fullname, age, score) VALUES (?,?,?,?,0)";
+		try {
+			ps = conn.prepareStatement(sql2);
+			ps.setString(1,user.getUsername());
+			ps.setString(2,password);
+			ps.setString(3, user.getUsername());
+			ps.setInt(4,user.getAge());
+
+			int record = ps.executeUpdate();
+			return record > 0;
+		}catch (Exception e1){
+			e1.printStackTrace();
+			return false;
+		}
+	}
+
+    public void update(User user) {
+        String sql = "UPDATE users SET score = score + 1 WHERE usename = ?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, user.getUsername());
+			int record = ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+
+		}
     }
 
-    public void update() {
+    public int getScore(User user) {
+		String sql = "SELECT score FROM users WHERE username = ?";
+		try {
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, user.getUsername());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next())
+				return rs.getInt(1);
 
-    }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
     public void delete() {
 
@@ -23,7 +76,24 @@ public class UserRepository {
     }
 
     public User findByUsername(String username) {
+        User user = new User();
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+				user.setUsername(rs.getString(0));
+				user.setFullname(rs.getString(2));
+				user.setAge(rs.getInt(3));
+				user.setScore(rs.getInt(4));
+            }
+			return user;
 
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         //TODO: find user by username
         return new User();
     }

@@ -17,6 +17,8 @@ public interface GameControlInterface extends Remote
     // n là kích thước ma trận vuông chứa ảnh
     GameData getGameData() throws RemoteException;
 
+    int getGameDataId() throws  RemoteException;
+
     //
     boolean checkResult(int userId, int x, int y) throws RemoteException;
 

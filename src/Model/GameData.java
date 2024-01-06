@@ -20,6 +20,7 @@ public class GameData implements Serializable {
         instance = null;
     }
 
+    private final int id;
     private final int x;
     private final int y;
     private final int n;
@@ -47,6 +48,8 @@ public class GameData implements Serializable {
         return n;
     }
 
+    public int getId() {return id;}
+
 
     @Override
     public String toString() {
@@ -62,6 +65,7 @@ public class GameData implements Serializable {
 
 
     public GameData(){
+        id = (int) (Math.random()*1000);
         n = (int) (Math.random() * 100000) % 5 + 3;
         x = (int) (Math.random() * 100000) % n;
         y = (int) (Math.random() * 100000) % n;
@@ -80,4 +84,5 @@ public class GameData implements Serializable {
             System.out.println("Image NULL");
         }
     }
+
 }

@@ -2,40 +2,47 @@ package BLL;
 
 import BLL.rmi.GameControlInterface;
 import BLL.rmi.RmiClient;
+import Constant.client.AppConstant;
 import Constant.client.ClientConstant;
 import Model.GameData;
-import View.Client_GUI;
+
 
 public abstract class Client_GUI_BLL {
     RmiClient rmiClient;
     GameControlInterface gameControlRemote;
+    GameData gameData;
 
     public Client_GUI_BLL() {
-        rmiClient = new RmiClient();
+        rmiClient = RmiClient.getInstance();
 
         try {
-            rmiClient.startConnectingToRmiServer(ClientConstant.SERVER_HOST, ClientConstant.SERVER_PORT);
+            rmiClient.startConnectingToRmiServer(AppConstant.SERVER_HOST, AppConstant.SERVER_PORT);
 
             this.gameControlRemote = rmiClient.getRemoteObject();
+
+            //  Liên tục check dữ liệu mới
+            checkNewGameData();
         } catch (Exception e) {
             e.printStackTrace();
             notification("Error when try to start game!");
         }
+
+
     }
 
-    abstract public void updateClientUI(GameData gameData);
     // Dialog thông báo mess
     abstract public void notification(String mess);
 
+    abstract public void updateClientUI();
+
+    abstract public void onResultWrong();
+
     public GameData onStartGame() {
         try {
-            GameData gameData = gameControlRemote.getGameData();
+            this.gameData = gameControlRemote.getGameData();
 
-<<<<<<< Updated upstream
+            return this.gameData;
 
-=======
-            return gameData;
->>>>>>> Stashed changes
         } catch (Exception e) {
             e.printStackTrace();
             notification("Error when try to start game!");
@@ -49,16 +56,16 @@ public abstract class Client_GUI_BLL {
         String[] ans = x_y.split(" ");
         int x = Integer.parseInt(ans[0]);
         int y = Integer.parseInt(ans[1]);
-<<<<<<< Updated upstream
-=======
+
         System.out.println(x+ " " + y);
->>>>>>> Stashed changes
+
         try {
-            Boolean result = gameControlRemote.checkResult(1, x, y);
+            boolean result = gameControlRemote.checkResult(1, x, y);
 
             if (result) {
-                GameData newGameData = gameControlRemote.getGameData();
-                updateClientUI(newGameData);
+                updateClientUI();
+            } else {
+                onResultWrong();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,4 +78,28 @@ public abstract class Client_GUI_BLL {
     }
 
 //    public void on
+
+    private void checkNewGameData() {
+        Thread checkUpdateThread = new Thread(() -> {
+
+            while (true) {
+                try {
+                    if (gameControlRemote.getGameDataId() != gameData.getId()) {
+                        updateClientUI();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    notification("Error when try to check update game data!");
+                }
+
+                try {
+                    Thread.sleep(ClientConstant.TIME_REFRESH_MILI_SECOND);
+                } catch (InterruptedException ignored) {
+                }
+            }
+
+        });
+
+        checkUpdateThread.start();
+    }
 }
