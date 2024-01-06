@@ -21,15 +21,15 @@ public class UserRepository {
 	public UserRepository() {
 		conn = new Connect().connect();
 	}
-    public boolean Insert(User user, String password) {
+    public boolean Insert(String username, String password, String fullname, int age) {
 
 		String sql2 = "INSERT INTO users (username,password, fullname, age, score) VALUES (?,?,?,?,0)";
 		try {
 			ps = conn.prepareStatement(sql2);
-			ps.setString(1,user.getUsername());
+			ps.setString(1,username);
 			ps.setString(2,password);
-			ps.setString(3, user.getUsername());
-			ps.setInt(4,user.getAge());
+			ps.setString(3, fullname);
+			ps.setInt(4,age);
 
 			int record = ps.executeUpdate();
 			return record > 0;
@@ -39,11 +39,11 @@ public class UserRepository {
 		}
 	}
 
-    public void update(User user) {
+    public void update(String username) {
         String sql = "UPDATE users SET score = score + 1 WHERE usename = ?";
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, user.getUsername());
+			ps.setString(1, username);
 			int record = ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -51,11 +51,11 @@ public class UserRepository {
 		}
     }
 
-    public int getScore(User user) {
+    public int getScore(String username) {
 		String sql = "SELECT score FROM users WHERE username = ?";
 		try {
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, user.getUsername());
+			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next())
 				return rs.getInt(1);
