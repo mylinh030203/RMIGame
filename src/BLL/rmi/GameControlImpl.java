@@ -62,6 +62,7 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     @Override
     public int getGameDataId() {
         return GameData.getInstance().getId();
+        //
     }
 
     @Override
