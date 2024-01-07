@@ -4,7 +4,10 @@ import Model.User;
 import Data.Database.Connect;
 import util.PasswordHash;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class UserRepository {
 
@@ -90,10 +93,10 @@ public class UserRepository {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-				user.setUsername(rs.getString(0));
-				user.setFullname(rs.getString(2));
-				user.setAge(rs.getInt(3));
-				user.setScore(rs.getInt(4));
+				user.setUsername(rs.getString(1));
+				user.setFullname(rs.getString(3));
+				user.setAge(rs.getInt(4));
+				user.setScore(rs.getInt(5));
             } else {
 				return null;
 			}
@@ -106,4 +109,35 @@ public class UserRepository {
         //TODO: find user by username
         return new User();
     }
+	public ArrayList<User> getListUser(){
+		ArrayList<User> ListUser = new ArrayList<User>();
+
+		String sql = "Select * from users order by score DESC";
+		rs = cn.listAll(sql);
+		try {
+			while(rs.next()) {
+				User user = new User();
+				user.setUsername(rs.getString(1));
+				user.setFullname(rs.getString(3));
+				user.setAge(rs.getInt(4));
+				user.setScore(rs.getInt(5));
+				ListUser.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ListUser;
+	}
+
+	public boolean Login(String Username, String Password) throws SQLException, UnknownHostException, IOException {
+		rs=cn.listAll("Select * from users where username = '"+Username+"' and password = '"+Password+"'");
+		if(rs.next()) {
+			return true;
+		}else {
+//			JOptionPane.showMessageDialog(null, "Username or Password incorrect");
+			return false;
+		}
+	}
 }

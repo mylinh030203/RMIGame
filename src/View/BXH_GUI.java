@@ -1,7 +1,12 @@
 package View;
 
+import BLL.BXH_GUI_BLL;
+import Model.User;
+import util.VectorSubport;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -16,7 +21,8 @@ public class BXH_GUI extends JFrame {
 	private JPanel contentPane;
 	private JTable table;
 	public Vector vT = new Vector<>();
-	public Vector vD = new Vector<>(); 
+	public Vector vD = new Vector<>();
+
 
 	/**
 	 * Launch the application.
@@ -37,6 +43,7 @@ public class BXH_GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public BXH_GUI() {
+		init();
 		setVisible(true);
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 578, 420);
@@ -63,5 +70,19 @@ public class BXH_GUI extends JFrame {
 	public void setData(Vector data) {
 		vD = data;
 		table.setModel(new DefaultTableModel(vD, vT));
+	}
+	public void init(){
+		BXH_GUI_BLL bxhGuiBll = new BXH_GUI_BLL() {
+			@Override
+			public void notification(String mess) {
+
+			}
+
+			@Override
+			public void updateBxhUI(List<User> userList) {
+				Vector vt = VectorSubport.ArraylistToVector(userList);
+				setData(vt);
+			}
+		};
 	}
 }

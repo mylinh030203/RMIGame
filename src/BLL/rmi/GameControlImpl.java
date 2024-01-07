@@ -91,8 +91,6 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
 
     @Override
     public List<User> getRanking() {
-
-//        return sql.getListUser();
-        return null;
+        return userRepository.getListUser();
     }
 }

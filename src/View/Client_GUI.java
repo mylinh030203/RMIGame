@@ -115,7 +115,7 @@ public class Client_GUI extends JFrame{
 
 		ListUser.addActionListener(e -> {
 			// TODO Auto-generated method stub
-
+			bxh();
 			//gọi bxh
 		});
 	}
@@ -147,6 +147,9 @@ private Icon getIcon(byte[]anh, int size) {
 	public Block_GUI block(){
 		client.dispose();
 		return new Block_GUI();
+	}
+	public BXH_GUI bxh(){
+		return new BXH_GUI();
 	}
 
 
