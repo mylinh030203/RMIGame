@@ -1,5 +1,5 @@
+import BLL.Constant.AppConstant;
 import BLL.rmi.RmiServer;
-import Constant.client.AppConstant;
 
 public class ServerHost {
     public static void main(String[] args) {

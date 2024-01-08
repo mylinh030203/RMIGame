@@ -1,16 +1,18 @@
 package BLL;
 
 
+import BLL.Constant.AppConstant;
 import BLL.rmi.GameControlInterface;
 import BLL.rmi.RmiClient;
-import Constant.client.AppConstant;
-import Model.User;
+import BLL.Constant.ClientConstant;
+import DAL.Model.User;
 
 import java.util.List;
 
 public abstract class BXH_GUI_BLL {
     RmiClient rmiClient;
     GameControlInterface gameControlRemote;
+    boolean shouldRefresh;
 
     public BXH_GUI_BLL() {
         rmiClient = RmiClient.getInstance();
@@ -26,25 +28,37 @@ public abstract class BXH_GUI_BLL {
     }
 
     public abstract void notification(String mess);
+
     public abstract void updateBxhUI(List<User> userList);
 
-    public void onStart() {
+    public void onShowRanking() {
+        this.shouldRefresh = true;
         refresh();
     }
 
-    // Nếu có nút refresh thì gọi hàm này, không thì xóa
-    public void onRefresh() {
-        refresh();
+    public void onHide() {
+        this.shouldRefresh = false;
     }
 
     private void refresh() {
-        try {
-            List<User> userList = gameControlRemote.getRanking();
+        Thread refreshThread = new Thread(() -> {
+            try {
+                while (shouldRefresh) {
+                    Thread.sleep(ClientConstant.TIME_REFRESH_RANKING_MILI_SECOND);
 
-            updateBxhUI(userList);
-        } catch (Exception e) {
-            e.printStackTrace();
-            notification("Error when try to get ranking!");
-        }
+                    List<User> userList = gameControlRemote.getRanking();
+
+                    userList.forEach(System.out::println);
+
+                    updateBxhUI(userList);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                notification("Error when try to get ranking!");
+            }
+
+        });
+
+        refreshThread.start();
     }
 }

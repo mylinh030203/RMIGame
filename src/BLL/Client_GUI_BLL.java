@@ -1,10 +1,11 @@
 package BLL;
 
+import BLL.Authentication.Auth;
 import BLL.rmi.GameControlInterface;
 import BLL.rmi.RmiClient;
-import Constant.client.AppConstant;
-import Constant.client.ClientConstant;
-import Model.GameData;
+import BLL.Constant.AppConstant;
+import BLL.Constant.ClientConstant;
+import DAL.Model.GameData;
 import util.enum_class.ResultStatus;
 
 
@@ -59,7 +60,11 @@ public abstract class Client_GUI_BLL {
         System.out.println(x + " " + y);
 
         try {
-            ResultStatus resultStatus = gameControlRemote.checkResult(1,gameData.getId(), x, y);
+            String currentUsername = Auth.getInstance().getCurrentUser().getUsername();
+
+            System.out.println("Current username: " + currentUsername);
+
+            ResultStatus resultStatus = gameControlRemote.checkResult(currentUsername,gameData.getId(), x, y);
 
             if (resultStatus == ResultStatus.CORRECT) {
                 // Hiện chúc mừng trên giao dieện nếu cần
@@ -87,7 +92,7 @@ public abstract class Client_GUI_BLL {
         Thread checkUpdateThread = new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(ClientConstant.TIME_REFRESH_MILI_SECOND);
+                    Thread.sleep(ClientConstant.TIME_REFRESH_GAME_DATA_MILI_SECOND);
 
 //                    System.out.println("Check gameData update: client gameDataId: " + gameData.getId()
 //                            + "server gameDataId: " + gameControlRemote.getGameDataId() );

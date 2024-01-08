@@ -1,10 +1,10 @@
 package BLL.rmi;
 
-import BLL.Repository.GameDataRepository;
-import BLL.Repository.UserRepository;
+import DAL.Repository.GameDataRepository;
+import DAL.Repository.UserRepository;
 //import Data.Database.DataSQL_Model;
-import Model.GameData;
-import Model.User;
+import DAL.Model.GameData;
+import DAL.Model.User;
 import util.PasswordHash;
 import util.enum_class.ResultStatus;
 
@@ -22,14 +22,17 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     }
 
     @Override
-    public boolean register(String username, String password) {
+    public boolean register(String username, String password, String fullName, int age) {
 
         //TODO:  validate
 
         //
         User newUser = new User();
         newUser.setUsername(username);
+        newUser.setFullname(fullName);
+        newUser.setAge(age);
         newUser.setPassword(PasswordHash.generateMD5(password));
+        newUser.setScore(0);
 
         return userRepository.insert(newUser);
     }
@@ -37,15 +40,22 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     @Override
     public User logIn(String username, String password) {
         User user = userRepository.findByUsername(username);
+        System.out.println(user);
 
         if (user == null) {
             return null;
         }
 
-        String passwordHash = PasswordHash.generateMD5(password);
+        System.out.println("Pass from DB: " + user.getPassword());
 
-        if (user.getPassword().equals(passwordHash))
+        String passwordHash = PasswordHash.generateMD5(password);
+        System.out.println("Pass md5: " + passwordHash);
+
+        if (user.getPassword().equalsIgnoreCase(passwordHash)) {
+            user.setPassword("");
             return user;
+        }
+
 
         // trả về null nếu username hoặc pass không đúng, cần thông báo ở client nếu nhận được
         // giá trị null
@@ -66,7 +76,7 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     }
 
     @Override
-    public ResultStatus checkResult(int userId, int gameDataId, int x, int y) {
+    public ResultStatus checkResult(String username, int gameDataId, int x, int y) {
         GameData currentGameData = GameData.getInstance();
 
         if (gameDataId != currentGameData.getId())
@@ -77,7 +87,9 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
         ResultStatus resultStatus;
         if (resultCheck) {
             //TODO: Cộng diem cho user
-//            sql.increasePoint(userId);
+//            sql.increasePoint(username);
+            userRepository.increaseScore(username);
+
             System.out.println(x+"  check "+y);
             GameData.destroyInstance();
 
@@ -85,7 +97,7 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
         } else {
             resultStatus = ResultStatus.WRONG;
         }
-        System.out.println("Check result: userId = " + userId + " result = " + resultStatus);
+        System.out.println("Check result: userId = " + username + " result = " + resultStatus);
         return resultStatus;
     }
 

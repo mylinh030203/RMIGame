@@ -1,26 +1,35 @@
 package util;
 
 import java.security.MessageDigest;
+import java.util.Formatter;
 
 public class PasswordHash {
     public static String generateMD5(String input) {
         try {
-            // Tạo một đối tượng MessageDigest với thuật toán MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(input.getBytes());
+            byte[] digest = md.digest();
 
-            // Chuyển đổi input thành mảng byte
-            byte[] messageDigest = md.digest(input.getBytes());
-
-            // Chuyển đổi mảng byte thành chuỗi hex
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : messageDigest) {
-                hexString.append(String.format("%02x", b));
+            StringBuilder myHash = new StringBuilder();
+            try (Formatter formatter = new Formatter(myHash)) {
+                for (byte b : digest) {
+                    formatter.format("%02X", b);
+                }
             }
 
-            return hexString.toString();
+            System.out.println("Hash: " + input + " -> " + myHash);
+
+            return myHash.toString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void main(String[] args) {
+
+        String myHash = PasswordHash.generateMD5("abcd1234");
+        System.out.println(myHash);
+
     }
 }
