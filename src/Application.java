@@ -2,6 +2,7 @@ import BLL.rmi.GameControlInterface;
 import BLL.rmi.RmiClient;
 import BLL.rmi.RmiServer;
 import Model.GameData;
+import util.enum_class.ResultStatus;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -9,7 +10,7 @@ import java.rmi.RemoteException;
 
 public class Application {
     public static void main(String[] args) {
-        RmiClient rmiClient = new RmiClient();
+        RmiClient rmiClient = RmiClient.getInstance();
         try {
             rmiClient.startConnectingToRmiServer("localhost", 111);
 
@@ -26,7 +27,7 @@ public class Application {
                 System.out.println("X: " + x + ", Y: " + y);
 
 
-                result = gameControl.checkResult(0, x, y);
+                result = gameControl.checkResult(0,gameData.getId(), x, y) == ResultStatus.CORRECT;
                 System.out.println(result);
             }
         } catch (Exception e) {
