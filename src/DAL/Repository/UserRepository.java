@@ -1,7 +1,7 @@
 package DAL.Repository;
 
+import DAL.Database.Connect;
 import DAL.Model.User;
-import Data.Database.Connect;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -107,6 +107,7 @@ public class UserRepository {
             e.printStackTrace();
         }
         //TODO: find user by username
+		cn.closeResources();
         return new User();
     }
 	public ArrayList<User> getListUser(){
@@ -127,7 +128,7 @@ public class UserRepository {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		cn.closeResources();
 		return ListUser;
 	}
 

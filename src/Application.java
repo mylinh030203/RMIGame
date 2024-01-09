@@ -3,7 +3,6 @@ import BLL.rmi.GameControlInterface;
 import BLL.rmi.RmiClient;
 import DAL.Model.GameData;
 import Presentation.Login_GUI;
-import util.enum_class.ResultStatus;
 
 public class Application {
     public static void main(String[] args) {

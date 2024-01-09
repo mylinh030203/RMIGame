@@ -1,4 +1,4 @@
-package Data.Database;
+package DAL.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +17,8 @@ public class Connect {
 		// TODO Auto-generated method stub
 
 		try{
-			   String userName = "root";
-			   String password = "";
+			   String userName = "linhptm";
+			   String password = "Havana18081988@";
 			   String url = "jdbc:mysql://localhost:3306/rmigame";
 			   Class.forName ("com.mysql.cj.jdbc.Driver");
 			   conn = DriverManager.getConnection(url, userName, password);
@@ -47,13 +47,8 @@ public class Connect {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				conn.close();
-				stmt.close();
-			} catch (Exception e2) {
-				// TODO: handle exception
-				e2.printStackTrace();
-			}
+				closeResources();
+
 		}
 		return record;
 	}
@@ -67,16 +62,27 @@ public class Connect {
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				//conn.close();
-				//stmt.close();
-			} catch (Exception e2) {
-				// TODO: handle exception
-				e2.printStackTrace();
-			}
+
 		}
 		return rs;
 
+	}
+
+	public void closeResources() {
+		try {
+			if (rs != null) {
+				rs.close();
+			}
+			if (stmt != null) {
+				stmt.close();
+			}
+			if (conn != null) {
+				conn.close();
+				System.out.println("Connection closed");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	public static void main(String [] agrs) {
 		new Connect().connect();
