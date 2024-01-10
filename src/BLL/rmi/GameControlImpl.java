@@ -86,18 +86,16 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
 
         ResultStatus resultStatus;
         if (resultCheck) {
+            GameData.destroyInstance();
             //TODO: Cộng diem cho user
-//            sql.increasePoint(username);
             userRepository.increaseScore(username);
 
-            System.out.println(x+"  check "+y);
-            GameData.destroyInstance();
 
             resultStatus = ResultStatus.CORRECT;
         } else {
             resultStatus = ResultStatus.WRONG;
         }
-        System.out.println("Check result: userId = " + username + " result = " + resultStatus);
+//        System.out.println("Check result: userId = " + username + " result = " + resultStatus);
         return resultStatus;
     }
 

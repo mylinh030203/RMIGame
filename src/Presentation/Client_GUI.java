@@ -17,7 +17,7 @@ import BLL.Client_GUI_BLL;
 public class Client_GUI extends JFrame{
 	GameData gameData;
 	Client_GUI_BLL clientGuiBll;
-
+	Block_GUI b;
 	byte[]anh1,anh2;
 	public JButton BT[][] = new JButton[100][100];
 	public JButton ListUser;
@@ -70,17 +70,29 @@ public class Client_GUI extends JFrame{
 //	}
 
 	public void init() {
+		b = new Block_GUI();
+		b.setVisible(false);
 		clientGuiBll = new Client_GUI_BLL(){
 			@Override
 			public void updateClientUI() {
 				NewGame();
+				b.setVisible(false);
 			}
 
 
 			@Override
 			public void onResultWrong() {
-				block();
+				client.dispose();
 
+				b.setVisible(true);
+//
+//				try{
+//					Thread.sleep(5000);
+//				}
+//				catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				b.setVisible(false);
 			}
 
 			@Override
@@ -144,10 +156,7 @@ private Icon getIcon(byte[]anh, int size) {
 		return new Client_GUI();
 	}
 
-	public Block_GUI block(){
-		client.dispose();
-		return new Block_GUI();
-	}
+
 	private void bxh(){
 		BXH_GUI.getInstance().showRanking();
 	}
