@@ -1,10 +1,12 @@
 package BLL.rmi;
 
-import BLL.Repository.GameDataRepository;
-import BLL.Repository.UserRepository;
+import DAL.Repository.GameDataRepository;
+import DAL.Repository.UserRepository;
 //import Data.Database.DataSQL_Model;
-import Model.GameData;
-import Model.User;
+import DAL.Model.GameData;
+import DAL.Model.User;
+import util.PasswordHash;
+import util.enum_class.ResultStatus;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -20,21 +22,40 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     }
 
     @Override
-    public User register(String username, String password) {
+    public boolean register(String username, String password, String fullName, int age) {
 
         //TODO:  validate
 
         //
         User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setFullname(fullName);
+        newUser.setAge(age);
+        newUser.setPassword(PasswordHash.generateMD5(password));
+        newUser.setScore(0);
+
         return userRepository.insert(newUser);
     }
 
     @Override
     public User logIn(String username, String password) {
         User user = userRepository.findByUsername(username);
+        System.out.println(user);
 
-//        if (user.password.equals(password))
-//            return user;
+        if (user == null) {
+            return null;
+        }
+
+        System.out.println("Pass from DB: " + user.getPassword());
+
+        String passwordHash = PasswordHash.generateMD5(password);
+        System.out.println("Pass md5: " + passwordHash);
+
+        if (user.getPassword().equalsIgnoreCase(passwordHash)) {
+            user.setPassword("");
+            return user;
+        }
+
 
         // trả về null nếu username hoặc pass không đúng, cần thông báo ở client nếu nhận được
         // giá trị null
@@ -45,32 +66,41 @@ public class GameControlImpl extends UnicastRemoteObject implements GameControlI
     public GameData getGameData() {
         System.out.println(GameData.getInstance());
 
-        // TODO: Coppy GameData, thay x, y = -1 (dấu đáp án) sau đó mới return bản sao
         return GameData.getInstance();
     }
 
     @Override
-    public boolean checkResult(int userId, int x, int y) {
-        GameData currentGame = GameData.getInstance();
+    public int getGameDataId() {
+        return GameData.getInstance().getId();
+        //
+    }
 
-        if (currentGame.getX() == x && currentGame.getY() == y) {
-            //TODO: Cộng diem cho user
-//            sql.increasePoint(userId);
+    @Override
+    public ResultStatus checkResult(String username, int gameDataId, int x, int y) {
+        GameData currentGameData = GameData.getInstance();
 
+        if (gameDataId != currentGameData.getId())
+            return ResultStatus.EXPIRED;
+
+        boolean resultCheck = currentGameData.getX() == x && currentGameData.getY() == y;
+
+        ResultStatus resultStatus;
+        if (resultCheck) {
             GameData.destroyInstance();
+            //TODO: Cộng diem cho user
+            userRepository.increaseScore(username);
 
-            //TODO: Gọi callback từng client update game mới
-            // hoặc để client liên tục check trạng thái và tự cập nhật
-            return true;
+
+            resultStatus = ResultStatus.CORRECT;
+        } else {
+            resultStatus = ResultStatus.WRONG;
         }
-
-        return false;
+//        System.out.println("Check result: userId = " + username + " result = " + resultStatus);
+        return resultStatus;
     }
 
     @Override
     public List<User> getRanking() {
-
-//        return sql.getListUser();
-        return null;
+        return userRepository.getListUser();
     }
 }

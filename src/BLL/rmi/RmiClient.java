@@ -9,7 +9,17 @@ public class RmiClient {
     private GameControlInterface remote_obj;
     private boolean is_remote_server;
 
-    public RmiClient() {
+    private static RmiClient instance;
+
+    public static RmiClient getInstance() {
+        if (instance == null) {
+            instance = new RmiClient();
+        }
+
+        return instance;
+    }
+
+    private RmiClient() {
         this.remote_obj = null;
         this.is_remote_server = false;
     }

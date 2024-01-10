@@ -1,54 +1,80 @@
 package BLL;
 
+import BLL.Authentication.Auth;
 import BLL.rmi.GameControlInterface;
 import BLL.rmi.RmiClient;
-import Constant.client.ClientConstant;
-import Model.GameData;
-import View.Client_GUI;
+import BLL.Constant.AppConstant;
+import BLL.Constant.ClientConstant;
+import DAL.Model.GameData;
+import util.enum_class.ResultStatus;
+
 
 public abstract class Client_GUI_BLL {
     RmiClient rmiClient;
     GameControlInterface gameControlRemote;
+    GameData gameData;
 
     public Client_GUI_BLL() {
-        rmiClient = new RmiClient();
+        rmiClient = RmiClient.getInstance();
 
         try {
-            rmiClient.startConnectingToRmiServer(ClientConstant.SERVER_HOST, ClientConstant.SERVER_PORT);
+            rmiClient.startConnectingToRmiServer(AppConstant.SERVER_HOST, AppConstant.SERVER_PORT);
 
             this.gameControlRemote = rmiClient.getRemoteObject();
+
+            //  Liên tục check dữ liệu mới
+            checkNewGameData();
         } catch (Exception e) {
             e.printStackTrace();
             notification("Error when try to start game!");
         }
+
+
     }
 
-    abstract public void updateClientUI(GameData gameData);
     // Dialog thông báo mess
     abstract public void notification(String mess);
 
-    public void onStartGame() {
-        try {
-            GameData gameData = gameControlRemote.getGameData();
+    abstract public void updateClientUI();
 
+    abstract public void onResultWrong();
+
+    public GameData onStartGame() {
+        try {
+            this.gameData = gameControlRemote.getGameData();
+
+            return this.gameData;
 
         } catch (Exception e) {
             e.printStackTrace();
             notification("Error when try to start game!");
         }
+
+        return null;
     }
 
     // Khi người dùng click ảnh chọn đáp án
-    public void onClickAns(String x_y) {
-        String[] ans = x_y.split(" ");
-        int x = Integer.parseInt(ans[0]);
-        int y = Integer.parseInt(ans[1]);
-        try {
-            Boolean result = gameControlRemote.checkResult(1, x, y);
+    public void onClickAns(int x, int y) {
 
-            if (result) {
-                GameData newGameData = gameControlRemote.getGameData();
-                updateClientUI(newGameData);
+
+        System.out.println(x + " " + y);
+
+        try {
+            String currentUsername = Auth.getInstance().getCurrentUser().getUsername();
+
+            System.out.println("Current username: " + currentUsername);
+
+            ResultStatus resultStatus = gameControlRemote.checkResult(currentUsername,gameData.getId(), x, y);
+
+            if (resultStatus == ResultStatus.CORRECT) {
+                // Hiện chúc mừng trên giao dieện nếu cần
+
+            } else if(resultStatus == ResultStatus.WRONG) {
+                onResultWrong();
+            } else  {
+                // Thông báo chậm tay, da co nguời tr lời úng
+
+                System.out.println("Qúa hạn");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,4 +87,28 @@ public abstract class Client_GUI_BLL {
     }
 
 //    public void on
+
+    private void checkNewGameData() {
+        Thread checkUpdateThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(ClientConstant.TIME_REFRESH_GAME_DATA_MILI_SECOND);
+
+//                    System.out.println("Check gameData update: client gameDataId: " + gameData.getId()
+//                            + "server gameDataId: " + gameControlRemote.getGameDataId() );
+
+                    if (gameControlRemote.getGameDataId() != gameData.getId()) {
+                        updateClientUI();
+
+                        break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    notification("Error when try to check update game data!");
+                }
+            }
+        });
+
+        checkUpdateThread.start();
+    }
 }
